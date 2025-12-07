@@ -1,15 +1,3 @@
-import express from 'express';
-import asyncHandler from 'express-async-handler';
-import { getMovies } from '../tmdb-api'; 
-
-
-const router = express.Router();
-
-router.get('/discover', asyncHandler(async (req, res) => {
-    const discoverMovies = await getMovies();
-    res.status(200).json(discoverMovies);
-}));
-
 export const login = async (username, password) => {
     const response = await fetch('http://localhost:8080/api/users', {
         headers: {
@@ -31,7 +19,3 @@ export const signup = async (username, password) => {
     });
     return response.json();
 };
-
-
-
-export default router;

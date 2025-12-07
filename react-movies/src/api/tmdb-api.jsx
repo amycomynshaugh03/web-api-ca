@@ -1,3 +1,5 @@
+
+
 export const getMovies = () => {
   return fetch(
     `http://localhost:8080/api/movies/discover`
