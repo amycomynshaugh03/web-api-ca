@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { AuthContext } from '../contexts/authContext';
-import { Link } from "react-router-dom"; // <-- use react-router-dom
+import { Link } from "react-router-dom"; 
 
 const LoginPage = () => {
   const { authenticate, isAuthenticated } = useContext(AuthContext);
@@ -16,19 +16,17 @@ const LoginPage = () => {
   const from = location.state?.from?.pathname || "/home";
 
   const loginHandler = async () => {
-    try {
-      await authenticate(userName, password);
-      if (isAuthenticated) {
-        navigate(from, { replace: true });
-      }
+   try {
+    await authenticate(userName, password);
+    navigate(from, { replace: true });   
     } catch (err) {
-      setError("Login failed: " + err.message);
+    setError("Login failed: " + err.message);
     }
-  };
+};
 
-  if (isAuthenticated) {
-    return <Navigate to={from} replace />;
-  }
+if (isAuthenticated) {
+  return <Navigate to={from} replace />;
+}
 
   return (
     <>

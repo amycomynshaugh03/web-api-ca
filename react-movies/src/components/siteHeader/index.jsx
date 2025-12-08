@@ -15,7 +15,7 @@ const SiteHeader = () => {
   const [tabValue, setTabValue] = useState(false);
 
   const menuOptions = [
-    { label: "Home", path: "/" },
+    { label: "Home", path: "/home" },
     { label: "Favorites", path: "/movies/favorites" },
     { label: "Playlist", path: "/movies/playlist" },
     { label: "Upcoming", path: "/movies/upcoming" },
