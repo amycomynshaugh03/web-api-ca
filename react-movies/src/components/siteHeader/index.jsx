@@ -41,7 +41,10 @@ const SiteHeader = () => {
         { label: "Signup", path: "/signup" },
       ];
 
-  const allMenuOptions = [...menuOptions, ...authOptions];
+  const allMenuOptions = isAuthenticated
+  ? [...menuOptions, ...authOptions] 
+  : authOptions;                   
+
 
   useEffect(() => {
     const currentIndex = allMenuOptions.findIndex(
@@ -104,34 +107,36 @@ const SiteHeader = () => {
         </Button>
       )}
 
-      {isMobile ? (
-        <>
-          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-            <MenuIcon />
-          </IconButton>
-          <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
-            {allMenuOptions.map((opt) => (
-              <MenuItem key={opt.label} onClick={() => handleMenuSelect(opt.path)}>
-                {opt.label}
-              </MenuItem>
-            ))}
-          </Menu>
-        </>
-      ) : (
-        <Tabs value={tabValue} onChange={handleTabChange} textColor="inherit">
-          {allMenuOptions.map((opt) => (
-            <Tab
-              key={opt.label}
-              label={opt.label}
-              sx={{
-                color: "#fff",
-                fontWeight: 500,
-                "&:hover": { backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 2 },
-              }}
-            />
-          ))}
+      {isAuthenticated && (
+  isMobile ? (
+    <>
+      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+        <MenuIcon />
+      </IconButton>
+      <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
+        {allMenuOptions.map((opt) => (
+          <MenuItem key={opt.label} onClick={() => handleMenuSelect(opt.path)}>
+            {opt.label}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  ) : (
+    <Tabs value={tabValue} onChange={handleTabChange} textColor="inherit">
+      {allMenuOptions.map((opt) => (
+        <Tab
+          key={opt.label}
+          label={opt.label}
+          sx={{
+            color: "#fff",
+            fontWeight: 500,
+            "&:hover": { backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 2 },
+          }}
+        />
+         ))}
         </Tabs>
-      )}
+         )
+        )}
         </Box>
         </Toolbar>
         </AppBar>
