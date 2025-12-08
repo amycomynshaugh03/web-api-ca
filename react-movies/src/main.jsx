@@ -40,8 +40,8 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <SiteHeader />
         <AuthContextProvider>
+          <SiteHeader />
         <MoviesContextProvider>
      
         <Routes>

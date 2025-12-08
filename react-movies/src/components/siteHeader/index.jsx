@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { AppBar, Toolbar, Typography, Tabs, Tab, IconButton, Menu, MenuItem } from "@mui/material";
+import React, { useState, useEffect, useContext } from "react";
+import {AppBar,Toolbar,Typography,Tabs,Tab,IconButton,Menu,MenuItem,Button,Box} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useNavigate, useLocation } from "react-router";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { AuthContext } from "../../contexts/authContext";
+
+
 
 const SiteHeader = () => {
+  const { isAuthenticated, userName, signout } = useContext(AuthContext);
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -25,14 +30,29 @@ const SiteHeader = () => {
     { label: "Now Playing", path: "/movies/now-playing" },
   ];
 
+  
+  const authOptions = isAuthenticated
+    ? [
+        { label: "Tasks", path: "/tasks" },
+        { label: "Profile", path: "/profile" },
+      ]
+    : [
+        { label: "Login", path: "/login" },
+        { label: "Signup", path: "/signup" },
+      ];
+
+  const allMenuOptions = [...menuOptions, ...authOptions];
+
   useEffect(() => {
-    const currentIndex = menuOptions.findIndex((opt) => opt.path === location.pathname);
+    const currentIndex = allMenuOptions.findIndex(
+      (opt) => opt.path === location.pathname
+    );
     setTabValue(currentIndex !== -1 ? currentIndex : false);
   }, [location.pathname]);
 
   const handleTabChange = (e, newValue) => {
     setTabValue(newValue);
-    navigate(menuOptions[newValue].path);
+    navigate(allMenuOptions[newValue].path);
   };
 
   const handleMenuSelect = (path) => {
@@ -43,66 +63,79 @@ const SiteHeader = () => {
   return (
     <>
       <AppBar sx={{ background: "linear-gradient(90deg,#2196f3,#64b5f6)", boxShadow: 4 }}>
-        <Toolbar sx={{ flexWrap: "wrap", gap: 2 }}>
-          <Typography
-            variant="h4"
-            sx={{ flexGrow: 1, fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}
-          >
-            TMDB Client
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            sx={{ flexGrow: 1, color: "#e3f2fd", fontFamily: "'Roboto', sans-serif" }}
-          >
-            All you ever wanted to know about Movies!
-          </Typography>
+  <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+    
+    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+      <Typography
+        variant="h6"
+        sx={{ fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}
+      >
+        TMDB Client
+      </Typography>
+      <Typography
+        variant="subtitle1"
+        sx={{ color: "#e3f2fd", fontFamily: "'Roboto', sans-serif'" }}
+      >
+        All you ever wanted to know about Movies!
+      </Typography>
+    </Box>
 
-          {isMobile ? (
-            <>
-              <IconButton
-                onClick={(e) => setAnchorEl(e.currentTarget)}
-                sx={{
-                  backgroundColor: "rgba(255,255,255,0.1)",
-                  "&:hover": { backgroundColor: "rgba(255,255,255,0.2)" },
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
-                {menuOptions.map((opt) => (
-                  <MenuItem
-                    key={opt.label}
-                    onClick={() => handleMenuSelect(opt.path)}
-                    sx={{ "&:hover": { backgroundColor: "#bbdefb" } }}
-                  >
-                    {opt.label}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </>
-          ) : (
-            <Tabs
-           value={tabValue}
-          onChange={handleTabChange}
-          textColor="inherit"
-
+    
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      {isAuthenticated ? (
+        <>
+          <Typography variant="body1">Welcome {userName}!</Typography>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={signout}
+            sx={{ textTransform: "none" }}
           >
-          {menuOptions.map((opt) => (
-          <Tab
-          key={opt.label}
-          label={opt.label}
-          sx={{
-          color: "#fff",
-          fontWeight: 500,
-         "&:hover": { backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 2 },
-        }}
-        />
-        ))}
+            Sign out
+          </Button>
+        </>
+      ) : (
+        <Button
+          variant="contained"
+          onClick={() => navigate("/login")}
+          sx={{ textTransform: "none" }}
+        >
+          Login
+        </Button>
+      )}
+
+      {isMobile ? (
+        <>
+          <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+            <MenuIcon />
+          </IconButton>
+          <Menu anchorEl={anchorEl} open={open} onClose={() => setAnchorEl(null)}>
+            {allMenuOptions.map((opt) => (
+              <MenuItem key={opt.label} onClick={() => handleMenuSelect(opt.path)}>
+                {opt.label}
+              </MenuItem>
+            ))}
+          </Menu>
+        </>
+      ) : (
+        <Tabs value={tabValue} onChange={handleTabChange} textColor="inherit">
+          {allMenuOptions.map((opt) => (
+            <Tab
+              key={opt.label}
+              label={opt.label}
+              sx={{
+                color: "#fff",
+                fontWeight: 500,
+                "&:hover": { backgroundColor: "rgba(255,255,255,0.2)", borderRadius: 2 },
+              }}
+            />
+          ))}
         </Tabs>
-
-          )}
+      )}
+        </Box>
         </Toolbar>
-      </AppBar>
+        </AppBar>
+
       <div style={{ minHeight: "64px" }} />
     </>
   );
