@@ -1,273 +1,65 @@
+const BASE_URL = "http://localhost:8080/api/movies";
 
+export const getMovies = async () =>
+  fetch(`${BASE_URL}/discover`).then(r => r.json());
 
-export const getMovies = () => {
-  return fetch(
-    `http://localhost:8080/api/movies/discover`
-  ).then((response) => {
-    if (!response.ok) {
-      return response.json().then((error) => {
-        throw new Error(error.status_message || "Something went wrong");
-      });
-    }
-    return response.json();
-  })
-  .catch((error) => {
-      throw error
-  });
+export const getMovie = async (arg) => {
+  const id = arg?.queryKey ? arg.queryKey[1].id : arg.id || arg;
+  return fetch(`${BASE_URL}/${id}`).then(r => r.json());
 };
 
+export const getGenres = async () =>
+  fetch(`${BASE_URL}/genres`).then(r => r.json());
 
-export const getMovie = (args) => {
-  //console.log(args)
-  const [, idPart] = args.queryKey;
-  const { id } = idPart;
-  return fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  ).then((response) => {
-    if (!response.ok) {
-      return response.json().then((error) => {
-        throw new Error(error.status_message || "Something went wrong");
-      });
-    }
-    return response.json();
-  })
-  .catch((error) => {
-    throw error
- });
+export const getMovieReviews = async (arg) => {
+  const id = arg?.queryKey ? arg.queryKey[1].id : arg.id || arg;
+  const data = await fetch(`${BASE_URL}/${id}/reviews`).then(r => r.json());
+  return data.results || [];
 };
 
-  export const getGenres = () => {
-    return fetch(
-      "https://api.themoviedb.org/3/genre/movie/list?api_key=" +
-        import.meta.env.VITE_TMDB_KEY +
-        "&language=en-US"
-    ).then( (response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      throw error
-   });
-  };
+export const getUpcomingMovies = async () =>
+  fetch(`${BASE_URL}/upcoming`).then(r => r.json()).then(data => data.results);
 
+export const getTrendingToday = async () =>
+  fetch(`${BASE_URL}/trending/today`).then(r => r.json());
 
-  export const getMovieImages = ({ queryKey }) => {
-    const [, idPart] = queryKey;
-    const { id } = idPart;
-    return fetch(
-      `https://api.themoviedb.org/3/movie/${id}/images?api_key=${import.meta.env.VITE_TMDB_KEY}`
-    ).then( (response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      throw error
-   });
-  };
+export const getPopularMovies = async () =>
+  fetch(`${BASE_URL}/popular`).then(r => r.json()).then(data => data.results);
 
+export const getTopRatedMovies = async () =>
+  fetch(`${BASE_URL}/top-rated`).then(r => r.json()).then(data => data.results);
 
-export const getMovieReviews = (id) => {
-  return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  )
-    .then((res) => res.json())
-    .then((json) => {
-      // console.log(json.results);
-      return json.results;
-    });
+export const getNowPlayingMovies = async () =>
+  fetch(`${BASE_URL}/now-playing`).then(r => r.json()).then(data => data.results);
+
+export const getMovieCredits = async (arg) => {
+  const id = arg?.queryKey ? arg.queryKey[1].id : arg.id || arg;
+  return fetch(`${BASE_URL}/${id}/credits`).then(r => r.json());
 };
 
-
-export const getUpcomingMovies = () => {
-  return fetch(
-    `https://api.themoviedb.org/3/movie/upcoming?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=1`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .then((json) => json.results) 
-    .catch((error) => {
-      throw error;
-    });
+export const getMovieVideos = async (arg) => {
+  const id = arg?.queryKey ? arg.queryKey[1].id : arg.id || arg;
+  return fetch(`${BASE_URL}/${id}/videos`).then(r => r.json());
 };
 
-export const getTrendingToday = () => {
-  return fetch(
-    `https://api.themoviedb.org/3/trending/movie/day?api_key=${process.env.REACT_APP_TMDB_KEY}`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .then((json) => json.results) 
-    .catch((error) => {
-      throw error;
-    });
+export const getMovieImages = async (arg) => {
+  const id = arg?.queryKey ? arg.queryKey[1].id : arg.id || arg;
+  return fetch(`${BASE_URL}/${id}/images`).then(r => r.json());
 };
 
-export const getPopularMovies = () => {
-  return fetch(
-    `https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .then((json) => json.results) 
-    .catch((error) => {
-      throw error;
-    });
+export const getPersonDetails = async (arg) => {
+  const id = arg?.queryKey ? arg.queryKey[1].id : arg.id || arg;
+  return fetch(`${BASE_URL}/person/${id}`).then(r => r.json());
 };
 
-export const getTopRatedMovies = () => {
-  return fetch(
-    `https://api.themoviedb.org/3/movie/top_rated?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .then((json) => json.results)
-    .catch((error) => {
-      throw error;
-    });
+export const getPersonMovieCredits = async (arg) => {
+  const id = arg?.queryKey ? arg.queryKey[1].id : arg.id || arg;
+  return fetch(`${BASE_URL}/person/${id}/credits`).then(r => r.json());
 };
 
-export const getNowPlayingMovies = () => {
-  return fetch(
-    `https://api.themoviedb.org/3/movie/now_playing?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .then((json) => json.results) 
-    .catch((error) => {
-      throw error;
-    });
-};
-
-export const getMovieCredits = (movieId) => {
-  return fetch(
-    `https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      throw error;
-    });
-};
-
-export const getMovieVideos = ({ queryKey }) => {
-  const [, idPart] = queryKey;
-  const { id } = idPart;
-  return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      throw error;
-    });
-};
-
-
-export const getPersonDetails = ({ queryKey }) => {
-  const [, idPart] = queryKey;
-  const { id } = idPart;
-  return fetch(
-    `https://api.themoviedb.org/3/person/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      throw error;
-    });
-};
-
-export const getPersonMovieCredits = ({ queryKey }) => {
-  const [, idPart] = queryKey;
-  const { id } = idPart;
-  return fetch(
-    `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      throw error;
-    });
-};
-
-export const getSimilarMovies = ({ queryKey }) => {
-  const [, idPart] = queryKey;
-  const { id } = idPart;
-  return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${import.meta.env.VITE_TMDB_KEY}`
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((error) => {
-          throw new Error(error.status_message || "Something went wrong");
-        });
-      }
-      return response.json();
-    })
-    .then((json) => json.results) 
-    .catch((error) => {
-      throw error;
-    });
+export const getSimilarMovies = async (arg) => {
+  const id = arg?.queryKey ? arg.queryKey[1].id : arg.id || arg;
+  const data = await fetch(`${BASE_URL}/${id}/similar`).then(r => r.json());
+  return data.results || [];
 };
 

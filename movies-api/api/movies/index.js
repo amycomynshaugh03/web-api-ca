@@ -1,37 +1,68 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { getMovies } from '../tmdb-api'; 
+import { getMovies, getMovie, getGenres,getMovieImages,getMovieReviews, getUpcomingMovies, getTrendingToday, getPopularMovies, getTopRatedMovies,getNowPlayingMovies, getMovieCredits, getMovieVideos, getPersonDetails, getPersonMovieCredits, getSimilarMovies } from '../tmdb-api'; 
 
 
 const router = express.Router();
 
-router.get('/discover', asyncHandler(async (req, res) => {
-    const discoverMovies = await getMovies();
-    res.status(200).json(discoverMovies);
+router.get("/discover", asyncHandler(async (req, res) => {
+  res.json(await getMovies());
 }));
 
-export const login = async (username, password) => {
-    const response = await fetch('http://localhost:8080/api/users', {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'post',
-        body: JSON.stringify({ username: username, password: password })
-    });
-    return response.json();
-};
+router.get("/genres", asyncHandler(async (req, res) => {
+  res.json(await getGenres());
+}));
 
-export const signup = async (username, password) => {
-    const response = await fetch('http://localhost:8080/api/users?action=register', {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'post',
-        body: JSON.stringify({ username: username, password: password })
-    });
-    return response.json();
-};
+router.get("/upcoming", asyncHandler(async (req, res) => {
+  res.json(await getUpcomingMovies());
+}));
 
+router.get("/trending/today", asyncHandler(async (req, res) => {
+  res.json(await getTrendingToday());
+}));
 
+router.get("/popular", asyncHandler(async (req, res) => {
+  res.json(await getPopularMovies());
+}));
+
+router.get("/top-rated", asyncHandler(async (req, res) => {
+  res.json(await getTopRatedMovies());
+}));
+
+router.get("/now-playing", asyncHandler(async (req, res) => {
+  res.json(await getNowPlayingMovies());
+}));
+
+router.get("/person/:id", asyncHandler(async (req, res) => {
+  res.json(await getPersonDetails(req.params.id));
+}));
+
+router.get("/person/:id/credits", asyncHandler(async (req, res) => {
+  res.json(await getPersonMovieCredits(req.params.id));
+}));
+
+router.get("/:id", asyncHandler(async (req, res) => {
+  res.json(await getMovie(req.params.id));
+}));
+
+router.get("/:id/reviews", asyncHandler(async (req, res) => {
+  res.json(await getMovieReviews(req.params.id));
+}));
+
+router.get("/:id/credits", asyncHandler(async (req, res) => {
+  res.json(await getMovieCredits(req.params.id));
+}));
+
+router.get("/:id/videos", asyncHandler(async (req, res) => {
+  res.json(await getMovieVideos(req.params.id));
+}));
+
+router.get("/:id/images", asyncHandler(async (req, res) => {
+  res.json(await getMovieImages(req.params.id));
+}));
+
+router.get("/:id/similar", asyncHandler(async (req, res) => {
+  res.json(await getSimilarMovies(req.params.id));
+}));
 
 export default router;
