@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { getFavorites, addFavorite, removeFavorite , getPlaylist, addPlaylist, removePlaylist} from "../api/movies-api";
+import { getFavorites, addFavorite, removeFavorite , getPlaylist, addPlaylist, removePlaylist, postReview, getMyReviews} from "../api/movies-api";
 import { AuthContext } from "./authContext";
 
 export const MoviesContext = React.createContext(null);
@@ -9,7 +9,8 @@ const MoviesContextProvider = (props) => {
   const { authToken } = useContext(AuthContext); 
   
   const [favorites, setFavorites] = useState([]);
-  const [myReviews, setMyReviews] = useState( {} ) 
+  const [userReviews, setUserReviews] = useState([]); 
+  const [myReviews, setMyReviews] = useState({});
   const [mustWatch, setMustWatch] = useState([]);
   const [playlist, setPlaylist] = useState([]);
 
@@ -29,12 +30,23 @@ const MoviesContextProvider = (props) => {
     setPlaylist(data || []);
   }, [authToken]);
 
+  const fetchUserReviews = useCallback(async () => {
+    if (!authToken) return;
+    try {
+      const data = await getMyReviews(authToken);
+      setUserReviews(data || []);
+    } catch (e) {
+      console.error("Fetch User Reviews Error:", e);
+    }
+  }, [authToken]);
+
   useEffect(() => {
     if (authToken) {
+      fetchUserReviews();
       fetchPlaylist();
       fetchFavorites(); 
     }
-  }, [authToken, fetchPlaylist]);
+  }, [authToken, fetchPlaylist, fetchFavorites, fetchUserReviews]);
   
 
   const addToFavorites = async (movie) => {
@@ -53,10 +65,6 @@ const MoviesContextProvider = (props) => {
     setFavorites(favorites.filter((mId) => mId !== movie.id)); 
   };
 
-  const addReview = (movie, review) => {
-    setMyReviews( {...myReviews, [movie.id]: review } )
-  };
-
   const addToMustWatch = (movie) => {
     setMustWatch([...mustWatch, movie.id]);
   };
@@ -73,6 +81,16 @@ const MoviesContextProvider = (props) => {
     setPlaylist(updatedPlaylist);
   };
 
+  const addReview = async (movie, reviewPayload) => {
+    if (!authToken) return;
+    try {
+      await postReview(reviewPayload, authToken);
+      await fetchUserReviews();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   
 
   return (
@@ -83,6 +101,8 @@ const MoviesContextProvider = (props) => {
         addToFavorites,
         removeFromFavorites,
         addReview,
+        userReviews,
+        fetchUserReviews,
         addToMustWatch,
         playlist,
         addToPlaylist,

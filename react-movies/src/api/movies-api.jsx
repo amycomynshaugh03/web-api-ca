@@ -73,3 +73,38 @@ export const removePlaylist = async (movieId, token) =>
     method: "DELETE",
     headers: { Authorization: token }
   }).then(r => r.json());
+
+
+export const postReview = async (review, token) => {
+    const response = await fetch('http://localhost:8080/api/reviews', {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token 
+        },
+        method: 'post',
+        body: JSON.stringify(review)
+    });
+    return response.json();
+};
+
+export const getMyReviews = async (token) => {
+  const response = await fetch('http://localhost:8080/api/reviews/me', {
+    method: 'GET',
+    headers: {
+      'Authorization': token, 
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) throw new Error("Failed to fetch");
+  return response.json();
+};
+
+export const deleteReview = async (reviewId, token) => {
+    const response = await fetch(`http://localhost:8080/api/reviews/${reviewId}`, {
+        method: 'DELETE',
+        headers: { 
+            'Authorization': token 
+        }
+    });
+    return response.json();
+};

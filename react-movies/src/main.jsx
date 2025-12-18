@@ -20,7 +20,8 @@ import StartPage from "./pages/startPage";
 import LoginPage from "./pages/loginPage";
 import SignUpPage from "./pages/signupPage";
 import ProfilePage from "./pages/profilePage";
-import ProtectedRoutes from "./protectedRoutes"
+import MyReviewsPage from "./pages/myReviewsPage";
+import ProtectedRoutes from "./protectedRoutes";
 import AuthContextProvider from "./contexts/authContext";
 
 
@@ -55,6 +56,7 @@ const App = () => {
         <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
         <Route path="/movies/playlist" element={<PlaylistPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/reviews/my-reviews" element={<MyReviewsPage />} />
         </Route>
 
         <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />

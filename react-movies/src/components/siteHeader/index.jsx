@@ -28,12 +28,12 @@ const SiteHeader = () => {
     { label: "Popular", path: "/movies/popular" },
     { label: "Top Rated", path: "/movies/top-rated" },
     { label: "Now Playing", path: "/movies/now-playing" },
+    { label: "My Reviews", path: "/reviews/my-reviews",}
   ];
 
   
   const authOptions = isAuthenticated
     ? [
-        { label: "Tasks", path: "/tasks" },
         { label: "Profile", path: "/profile" },
       ]
     : [
