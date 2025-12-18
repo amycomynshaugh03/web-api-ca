@@ -108,3 +108,15 @@ export const deleteReview = async (reviewId, token) => {
     });
     return response.json();
 };
+
+export const updateReview = async (reviewId, reviewData, token) => {
+  const response = await fetch(`http://localhost:8080/api/reviews/${reviewId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": token,
+    },
+    body: JSON.stringify(reviewData),
+  });
+  return response.json();
+};
