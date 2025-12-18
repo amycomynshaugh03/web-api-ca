@@ -87,6 +87,26 @@ router.delete('/favorites/:id', authenticate, asyncHandler(async (req, res) => {
     res.status(200).json(req.user.favorites);
 }));
 
+router.get('/playlist', authenticate, asyncHandler(async (req, res) => {
+  res.json(req.user.playlist || []);
+}));
+
+router.post('/playlist', authenticate, asyncHandler(async (req, res) => {
+  const movieId = req.body.movieId;
+  if (!req.user.playlist.includes(movieId)) {
+    req.user.playlist.push(movieId);
+    await req.user.save();
+  }
+  res.json(req.user.playlist);
+}));
+
+router.delete('/playlist/:id', authenticate, asyncHandler(async (req, res) => {
+  const movieId = Number(req.params.id); 
+  req.user.playlist = req.user.playlist.filter(id => id !== movieId);
+  await req.user.save();
+  res.status(200).json(req.user.playlist);
+}));
+
 
 
 export default router;

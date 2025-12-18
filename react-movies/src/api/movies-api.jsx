@@ -55,3 +55,21 @@ export const removeFavorite = async (movieId, token) =>
     method: "DELETE",
     headers: { Authorization: token }
   }).then(r => r.json());
+
+  export const getPlaylist = async (token) =>
+  fetch(`http://localhost:8080/api/users/playlist`, {
+    headers: { 'Authorization': token }
+  }).then(res => res.json());
+
+export const addPlaylist = async (movieId, token) =>
+  fetch(`http://localhost:8080/api/users/playlist`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": token },
+    body: JSON.stringify({ movieId })
+  }).then(r => r.json());
+
+export const removePlaylist = async (movieId, token) =>
+  fetch(`http://localhost:8080/api/users/playlist/${movieId}`, {
+    method: "DELETE",
+    headers: { Authorization: token }
+  }).then(r => r.json());

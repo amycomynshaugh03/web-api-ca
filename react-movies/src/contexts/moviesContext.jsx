@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from "react";
-import { getFavorites, addFavorite, removeFavorite } from "../api/movies-api";
+import { getFavorites, addFavorite, removeFavorite , getPlaylist, addPlaylist, removePlaylist} from "../api/movies-api";
 import { AuthContext } from "./authContext";
 
 export const MoviesContext = React.createContext(null);
@@ -23,9 +23,18 @@ const MoviesContextProvider = (props) => {
     }
   }, [authToken]);
 
+  const fetchPlaylist = useCallback(async () => {
+    if (!authToken) return;
+    const data = await getPlaylist(authToken);
+    setPlaylist(data || []);
+  }, [authToken]);
+
   useEffect(() => {
-    fetchFavorites();
-  }, [fetchFavorites]);
+    if (authToken) {
+      fetchPlaylist();
+      fetchFavorites(); 
+    }
+  }, [authToken, fetchPlaylist]);
   
 
   const addToFavorites = async (movie) => {
@@ -52,13 +61,19 @@ const MoviesContextProvider = (props) => {
     setMustWatch([...mustWatch, movie.id]);
   };
 
-  const addToPlaylist = (movie) => {
-    if (!playlist.find((m) => m.id === movie.id)) setPlaylist([...playlist, movie]);
+  const addToPlaylist = async (movie) => {
+    if (!authToken) return;
+    const updatedPlaylist = await addPlaylist(movie.id, authToken);
+    setPlaylist(updatedPlaylist);
   };
-  const removeFromPlaylist = (movie) => {
-    setPlaylist(playlist.filter((m) => m.id !== movie.id));
+  
+  const removeFromPlaylist = async (movie) => {
+    if (!authToken) return;
+    const updatedPlaylist = await removePlaylist(movie.id, authToken);
+    setPlaylist(updatedPlaylist);
   };
 
+  
 
   return (
     <MoviesContext.Provider
