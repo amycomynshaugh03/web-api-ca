@@ -2,6 +2,8 @@ import express from 'express';
 import User from './userModel';
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
+import authenticate from '../../authenticate';
+
 
 
 const router = express.Router(); // eslint-disable-line
@@ -65,6 +67,25 @@ async function authenticateUser(req, res) {
     }
 }
 
+router.get('/favorites', authenticate, asyncHandler(async (req, res) => {
+  res.json(req.user.favorites || []);
+}));
+
+router.post('/favorites', authenticate, asyncHandler(async (req, res) => {
+  const movieId = req.body.movieId;
+  if (!req.user.favorites.includes(movieId)) {
+    req.user.favorites.push(movieId);
+    await req.user.save();
+  }
+  res.json(req.user.favorites);
+}));
+
+router.delete('/favorites/:id', authenticate, asyncHandler(async (req, res) => {
+    const movieId = Number(req.params.id); 
+    req.user.favorites = req.user.favorites.filter(id => id !== movieId);
+    await req.user.save();
+    res.status(200).json(req.user.favorites);
+}));
 
 
 

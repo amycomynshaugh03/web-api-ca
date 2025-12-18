@@ -1,22 +1,33 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { MoviesContext } from "../../contexts/moviesContext";
 import IconButton from "@mui/material/IconButton";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Snackbar, Alert } from "@mui/material";
 
 const AddToFavoritesIcon = ({ movie }) => {
-  const context = useContext(MoviesContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const { fetchFavorites, favorites, addToFavorites, removeFromFavorites } = useContext(MoviesContext);
+  const isFavorite = favorites.includes(movie.id);
 
-  const handleAddToFavorites = (e) => {
-    e.preventDefault();
-    context.addToFavorites(movie);
-    setOpenSnackbar(true);
-  };
+ useEffect(() => {
+    fetchFavorites();
+  }, []);
+
+const handleFavoritesClick = (e) => {
+  e.preventDefault();
+  if (isFavorite) {
+    removeFromFavorites(movie);
+  } else {
+    addToFavorites(movie);
+  }
+  setOpenSnackbar(true);
+};
+  
+
 
   return (
     <>
-      <IconButton aria-label="add to favorites" onClick={handleAddToFavorites}>
+      <IconButton aria-label="add to favorites" onClick={handleFavoritesClick}>
         <FavoriteIcon color="primary" fontSize="large" />
       </IconButton>
 

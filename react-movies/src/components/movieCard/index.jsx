@@ -17,6 +17,7 @@ import img from "../images/film-poster-placeholder.png";
 export default function MovieCard({ movie, action, isPlaylistPage = false, showPlaylistButton = true }) {
   const { playlist, addToPlaylist, removeFromPlaylist } = useContext(MoviesContext);
   const isInPlaylist = playlist.find((m) => m.id === movie.id);
+ 
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
 

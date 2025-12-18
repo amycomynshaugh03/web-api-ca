@@ -5,9 +5,9 @@ export const AuthContext = createContext(null); //eslint-disable-line
 
 const AuthContextProvider = (props) => {
   const existingToken = localStorage.getItem("token");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [authToken, setAuthToken] = useState(existingToken); //eslint-disable-line
   const [userName, setUserName] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(!!existingToken); 
+  const [authToken, setAuthToken] = useState(existingToken);
 
   //Function to put JWT token in local storage.
   const setToken = (data) => {
@@ -40,7 +40,8 @@ const AuthContextProvider = (props) => {
         authenticate,
         register,
         signout,
-        userName
+        userName,
+        authToken
       }}
     >
       {props.children} {/* eslint-disable-line */}
