@@ -16,13 +16,13 @@ const LoginPage = () => {
   const from = location.state?.from?.pathname || "/home";
 
   const loginHandler = async () => {
-   try {
-    await authenticate(userName, password);
-    navigate(from, { replace: true });   
-    } catch (err) {
-    setError("Login failed: " + err.message);
+    const success = await authenticate(userName, password);
+    if (success) {
+      navigate(from, { replace: true });
+    } else {
+      setError("Invalid username or password");
     }
-};
+  };
 
 if (isAuthenticated) {
   return <Navigate to={from} replace />;

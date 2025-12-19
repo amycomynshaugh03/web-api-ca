@@ -10,7 +10,6 @@ const MoviesContextProvider = (props) => {
   
   const [favorites, setFavorites] = useState([]);
   const [userReviews, setUserReviews] = useState([]); 
-  const [myReviews, setMyReviews] = useState({});
   const [mustWatch, setMustWatch] = useState([]);
   const [playlist, setPlaylist] = useState([]);
 
@@ -45,6 +44,11 @@ const MoviesContextProvider = (props) => {
       fetchUserReviews();
       fetchPlaylist();
       fetchFavorites(); 
+    } else {
+      setFavorites([]);
+      setPlaylist([]);
+      setUserReviews([]);
+      setMustWatch([]);
     }
   }, [authToken, fetchPlaylist, fetchFavorites, fetchUserReviews]);
   
