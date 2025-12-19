@@ -34,9 +34,8 @@ router.post('/', asyncHandler(async (req, res) => {
 
 
 async function registerUser(req, res) {
-    const { password } = req.body;
+    const { username, password } = req.body;
 
-    // Password validation
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!passwordRegex.test(password)) {
         return res.status(400).json({ 
@@ -45,8 +44,17 @@ async function registerUser(req, res) {
         });
     }
 
-    await User.create(req.body);
-    res.status(201).json({ success: true, msg: 'User successfully created.' });
+    try {
+        const existingUser = await User.findByUserName(username);
+        if (existingUser) {
+            return res.status(400).json({ success: false, msg: 'Username already exists.' });
+        }
+
+        await User.create(req.body);
+        res.status(201).json({ success: true, msg: 'User successfully created.' });
+    } catch (error) {
+        res.status(500).json({ success: false, msg: error.message });
+    }
 }
 
 async function authenticateUser(req, res) {

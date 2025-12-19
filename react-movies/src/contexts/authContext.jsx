@@ -24,10 +24,14 @@ const AuthContextProvider = (props) => {
     }
   };
 
-  const register = async (username, password) => {
-    const result = await signup(username, password);
-    return result.success;
-  };
+const register = async (username, password) => {
+  const result = await signup(username, password);
+  if (result.success) {
+    return true;
+  } else {
+    return result.msg;
+  }
+};
 
   const signout = () => {
     setTimeout(() => setIsAuthenticated(false), 100);
